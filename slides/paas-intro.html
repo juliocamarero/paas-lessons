@@ -234,13 +234,14 @@
 			<p><cite><a href="http://en.wikipedia.org/wiki/Platform_as_a_service">Wikipedia</a></cite></p>
 		</blockquote>
 		<div class="slide"><h2>Open PaaS</h2></div>
-		<div class="slide"><h3>Support for different languages</h3></div>
-		<div class="slide"><h3>Support for different frameworks</h3></div>
+		<div class="slide"><h3>Support for different languages and frameworks</h3></div>		
 		<div class="slide"><h3>Great choice of many application services: databases, messaging queues, cache solutions ...</h3></div>
 		<div class="slide"><h3>Portability</h3></div>	
 		<div class="slide"><h3>Extensible</h3></div>	
 		<div class="slide"><h3>Agile development</h3></div>	
-		<div class="slide"><h3>Cloud provider deployment freedom</h3></div>
+		<div class="slide"><h3>Automated application infrastructure</h3></div>
+		<div class="slide"><h3>Self service app deployment</h3></div>
+		<div class="slide"><h3>Cloud provider deployment freedom</h3></div>		
 	</div>
 </section>
 
@@ -252,23 +253,143 @@
 	<div class="slide" style="margin-left:11%">
 		<h2>Tools</h2>	
 		<div class="slide"><h3><a href="http://cloudfoundry.org">Cloud Foundry</a></h3></div>
-		<div class="slide"><h3><a href="http://playframework.com">Play Framework</a></h3></div>
-		<div class="slide"><h3><a href="http://www.springsource.org/sts">Eclipse STS</a></h3></div>
+		<div class="slide"><h3><a href="http://playframework.com">Play Framework</a></h3></div>		
 		<div class="slide"><h3><a href="http://docs.cloudfoundry.com/tools/vmc/installing-vmc.html">CLI for Cloud Foundry</a></h3></div>
+		<div class="slide"><h3><a href="http://www.springsource.org/sts">Eclipse STS</a></h3></div>
 	</div>
 	<div class="slide" style="margin-left:11%">
-		<h2>Steps</h2>	
-		<div class="slide"><h3>Install our Micro CloudFoundry</h3></div>
-		<div class="slide"><h3>Install the tooling</h3></div>
+		<h2>What are we going to do?</h2>		
+		<div class="slide"><h3>CloudFoundry overview</h3></div>
+		<div class="slide"><h3>Install our Micro CloudFoundry environment</h3></div>		
 		<div class="slide"><h3>Develop our application</h3></div>
 		<div class="slide"><h3>Testing our development in a local environment</h3></div>
 		<div class="slide"><h3>Deploying our application to a production environment</h3></div>
 	</div>	
 </section>
 
+<section class="slide">	
+	<h1>Cloud Foundry overview</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Open architecture</h2>
+		<div class="slide"><p>Choice of clouds for deployment</p></div>
+		<div class="slide"><p>Choice of industry-standard frameworks and application infrastructure services</p></div>
+		<div class="slide"><p>Extensible architecture to “digest” future cloud innovation</p></div>
+		<div class="slide"><p>Available as open source</p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Self-service application execution engine</h2>
+		<div class="slide"><p>Build applications with latest high productivity frameworks</p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Automation engine for deployment and lifecycle management</h2>
+		<div class="slide"><p>Deploy and cloud-scale applications in seconds</p></div>
+	</div>
+</section>
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Alternatives</h2>
+		<div class="slide"><p><img src="images/CloudFoundry.png" /></p></div>		
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Self-service application execution engine</h2>
+		<div class="slide"><p>Build applications with latest high productivity frameworks</p></div>
+	</div>
+</section>
+
 <section class="slide">
 	<h1>Installing the Micro Cloud Foundry environment</h1>
 </section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Micro Cloud Foundry</h2>
+		<div class="slide"><p>Intance of Cloud Foundry prepared to run in a developer machine</p></div>
+		<div class="slide"><p>Distributed as a Virtual Machine image</p></div>
+		<div class="slide"><p>Full instance</p></div>
+		<div class="slide"><p>Develop and test in your local environment, deploy to any cloud</p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Prerequisites</h2>
+		<div class="slide"><p>A <a href="https://cloudfoundry.com/micro">Cloud Foundry account</a></p></div>
+		<div class="slide"><p>A <a href="http://www.vmware.com/products/workstation/overview.html">VMWare workstation</a>, <a href="http://www.vmware.com/products/fusion/overview.html">VMWare fusion</a> or <a href="http://www.vmware.com/products/player/overview.html">VMWare player</a></p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Installing the Command Line Tool (VMC)</h2>
+		<div class="slide">
+			<p>If Ruby is already installed in your machine just open a console and type:</p>
+			<pre class="shell">
+sudo gem install vmc
+			</pre>
+		</div>		
+	</div>
+</section>
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Download and configure the micro instance</h2>
+		<div class="slide">
+			<p>Configure our <a href="https://cloudfoundry.com/micro">Micro Cloud Foundry account</a></p>
+			<ul>
+				<div class="slide"><li>Enter an unique domain name</li></div>
+				<div class="slide"><li>Configuration token is created</li></div>
+				<div class="slide"><li>Download the VM file</li></div>
+			</ul>
+		</div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Start and configure the Virtual Machine</h2>
+		<div class="slide"><img src="images/MicroInstanceConfiguration.png" /></div>		
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Create a user to manage the deployments</h2>
+		<div class="slide">
+			<p>Target our micro cloud</p>
+			<pre class="shell">
+vmc target miguelinlas3.cloudfoundry.me
+			</pre>
+		</div>
+		<div class="slide">
+			<p>Create a new account. Enter your email address and the password (twice)</p>
+			<pre class="shell">
+vmc register
+			</pre>
+		</div>
+		<div class="slide">
+			<p>We can log into the vm using the root (or vcap) users. Use the password setted at the beginning of the process</p>
+			<pre class="shell">
+ssh root@miguelinlas3.cloudfoundry.me
+			</pre>
+		</div>					
+	</div>
+</section>
+
+<section class="slide">
+	<h1>Developing our small application</h1>
+</section>
+
+<section class="slide">
+	<h1>Testing in our local environment</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>PaaS definition</h2>	
+		<div class="slide"><h2>Open PaaS</h2></div>
+		<div class="slide"><h3>Support for different languages</h3></div>
+		<div class="slide"><h3>Support for different frameworks</h3></div>
+		<div class="slide"><h3>Great choice of many application services: databases, messaging queues, cache solutions ...</h3></div>
+		<div class="slide"><h3>Portability</h3></div>	
+		<div class="slide"><h3>Extensible</h3></div>	
+		<div class="slide"><h3>Agile development</h3></div>	
+		<div class="slide"><h3>Cloud provider deployment freedom</h3></div>
+	</div>
+</section>
+
 
 <section class="slide" style="margin-left:11%">
 	<h2>References</h2>
