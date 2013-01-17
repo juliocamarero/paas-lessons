@@ -293,10 +293,6 @@
 		<h2>Alternatives</h2>
 		<div class="slide"><p><img src="images/CloudFoundry.png" /></p></div>		
 	</div>
-	<div class="slide" style="margin-left:11%">
-		<h2>Self-service application execution engine</h2>
-		<div class="slide"><p>Build applications with latest high productivity frameworks</p></div>
-	</div>
 </section>
 
 <section class="slide">
@@ -382,24 +378,279 @@ ssh root@miguelinlas3.cloudfoundry.me
 		<div class="slide">
 			<h3>Play framework</h3>
 		</div>
+		<ul>
+			<div class="slide"><li><p>Scala powered. Leverage as much as possible to the compiler type checker</p></li></div>
+			<div class="slide"><li><p>Reactive model: based evented IO</p></li></div>
+			<div class="slide"><li><p>Stateless, easy to scale</p></li></div>
+			<div class="slide"><li><p>Scala and Java APIs</p></li></div>
+		</ul>
+		<div class="slide">
+			<h3>PostgreSQL database</h3>
+		</div>
+		<ul>
+			<div class="slide"><li><p>One of the most popular Open Source RDMBS</p></li></div>
+		</ul>
+		<div class="slide">
+			<h3>MongoDB</h3>
+		</div>
+		<ul>
+			<div class="slide"><li><p>NoSQL storage</p></li></div>
+		</ul>
+		<div class="slide">
+			<h3>RabbitMQ</h3>
+		</div>
+		<ul>
+			<div class="slide"><li><p>Message queue system</p></li></div>
+			<div class="slide"><li><p>AMQP</p></li></div>
+		</ul>
 	</div>
 </section>
 
 <section class="slide">
-	<h1>Testing in our local environment</h1>
+	<h1>Getting started</h1>
 </section>
 
 <section class="slide">
 	<div class="slide" style="margin-left:11%">
-		<h2>PaaS definition</h2>	
-		<div class="slide"><h2>Open PaaS</h2></div>
-		<div class="slide"><h3>Support for different languages</h3></div>
-		<div class="slide"><h3>Support for different frameworks</h3></div>
-		<div class="slide"><h3>Great choice of many application services: databases, messaging queues, cache solutions ...</h3></div>
-		<div class="slide"><h3>Portability</h3></div>	
-		<div class="slide"><h3>Extensible</h3></div>	
-		<div class="slide"><h3>Agile development</h3></div>	
-		<div class="slide"><h3>Cloud provider deployment freedom</h3></div>
+		<h2>First step: Creating our first application</h2>
+		<div class="slide">
+			<h3>Create a simple play application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play new getting-started
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Start the app</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play run
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create a small change in the Application.scala file</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+package controllers
+
+import play.api._
+import play.api.mvc._
+
+object Application extends Controller {
+  
+  def index = Action {
+    Ok("This is our first Play application. And it is written in Scala")
+  }
+  
+}
+			</pre>
+		</div>
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Second step: Deploying our first application</h2>
+		<div class="slide">
+			<h3>Target our micro instance</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc target http://api.miguelinlas3.cloudfoundry.me
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Login</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc login
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create the artifact of our application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play clean dist
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Deploy the previous artifact into our micro instance</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc push --path=dist/getting-started-1.0-SNAPSHOT.zip
+			</pre>
+		</div>
+
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Exercice. Play with the command line tool</h2>
+		<div class="slide">
+			<h3>List all the applications</h3>
+			<h3>Show the info of an application</h3>
+			<h3>Stop an application</h3>
+			<h3>Restart an application</h3>
+			<h3>Deploy a new version of an application</h3>
+		</div>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>
+		The TODO application
+		<div style="font-size: 70%">Connecting to a database</div>
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>A simple TODO application</h2>
+		<div class="slide">
+			<h3>What can we do?</h3>
+		</div>
+		<div class="slide"><p>Create TODO task</p></div>
+		<div class="slide"><p>List all TODO tasks</p></div>
+	</div>
+
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Model</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+package models;
+
+import play.db.ebean.Model;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class Task extends Model {
+ 	public static Finder<Long,Task> find = new Finder(
+    	Long.class, Task.class
+  	);
+	public static List<Task> all() {
+    	return find.all();
+  	}
+	public static void delete(Long id) {
+	    find.ref(id).delete();
+	}
+    @Id
+    public String id;
+    public String contents;
+}
+			</pre>
+		</div>
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Routes</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+# Home page
+GET     /                           controllers.Application.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+POST    /task                       controllers.Application.addTask()
+GET     /tasks                      controllers.Application.allTasks()
+			</pre>
+		</div>	
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Controllers</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+package controllers;
+
+import models.Task;
+import play.data.Form;
+
+import play.*;
+import play.mvc.*;
+
+import play.db.ebean.Model;
+
+import java.util.List;
+
+import static play.libs.Json.toJson;
+
+import views.html.*;
+
+public class Application extends Controller {
+  
+  public static Result addTask() {
+		Form<Task> form = form(Task.class).bindFromRequest();
+
+		Task task = form.get();
+		task.save();
+
+		return redirect(routes.Application.index());
+  }
+
+  public static Result index() {
+    return ok(index.render("TODO Application", form(Task.class)));
+  }
+
+	public static Result allTasks() {
+	    return ok(toJson(Task.all()));
+	}
+  
+}
+			</pre>
+		</div>		
+	</div>
+</section>
+
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Deploying our TODO application</h2>
+		<div class="slide">
+			<h3>Create the artifact of our application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play clean dist
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Deploy the previous artifact into our micro instance</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc push --path=dist/todo-1.0-SNAPSHOT.zip
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Configure the deployment. Remember to bind the service!</h3>
+		</div>
+		<div class="slide">
+			<p><img src="images/CloudFoundryDatabaseConf.png" /></p>
+		</div>
 	</div>
 </section>
 
