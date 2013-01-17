@@ -678,12 +678,13 @@ play new todo-nosql
 	<div class="slide" style="margin-left:11%">
 		<h2>Add the required Mongo dependencies</h2>
 		<div class="slide">			
+			<p>Add the required libraries to the <strong>/lib</strong> folder of our project.</p>
 			<pre class="shell">
-
+<a href="http://www.mongodb.org/downloads">mongo-2.0.8.jar</a>
+<a href="http://code.google.com/p/google-gson/downloads/list">gson-2.2.2.jar</a>
 			</pre>
 		</div>
 	</div>
-
 </section>
 
 <section class="slide">
@@ -694,73 +695,102 @@ play new todo-nosql
 		</div>
 		<div class="slide">			
 			<pre class="scala">
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
 # Home page
 GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
+# Tasks          
+GET     /tasks                  controllers.Application.tasks()
+POST    /tasks                  controllers.Application.newTask()
+POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
 
-POST    /task                       controllers.Application.addTask()
-GET     /tasks                      controllers.Application.allTasks()
+			</pre>
+		</div>
+
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Models</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+package models;
+
+public class Task {
+  public Long id;
+  public String label;
+}
 			</pre>
 		</div>	
-	</div>
 </section>
 
 <section class="slide">
 	<div class="slide" style="margin-left:11%">
-		<h2>Components of the application</h2>
+		<h2>Developing mode</h2>
 		<div class="slide">
-			<h3>Controllers</h3>
+			<h3>Start a MongoDB instance</h3>
 		</div>
 		<div class="slide">			
-			<pre class="scala">
-package controllers;
-
-import models.Task;
-import play.data.Form;
-
-import play.*;
-import play.mvc.*;
-
-import play.db.ebean.Model;
-
-import java.util.List;
-
-import static play.libs.Json.toJson;
-
-import views.html.*;
-
-public class Application extends Controller {
-  
-  public static Result addTask() {
-		Form<Task> form = form(Task.class).bindFromRequest();
-
-		Task task = form.get();
-		task.save();
-
-		return redirect(routes.Application.index());
-  }
-
-  public static Result index() {
-    return ok(index.render("TODO Application", form(Task.class)));
-  }
-
-	public static Result allTasks() {
-	    return ok(toJson(Task.all()));
-	}
-  
-}
+			<pre class="bash">
+mkdir /tmp/mongdb
+./mongod -dbpath=/tmp/mongdob
 			</pre>
-		</div>		
+		</div>
+		<div class="slide">
+			<h3>Start our application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play clean run
+			</pre>			
+		</div>
+		<div class="slide">
+			<h3>Create some data in our application</h3>
+		</div>
+		<div class="slide">
+			<h3>Connect to MongoDB from the command line and query some date</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+./mongo
+MongoDB shell version: 2.2.2
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+> use mongodb;
+switched to db mongodb
+> use db;
+switched to db db
+> db.tasklist.find();
+{ "_id" : ObjectId("50f8537003646522c0cd32f8"), "id" : NumberLong(0), "label" : "My first task" }
+> 
+			</pre>			
+		</div>
 	</div>
 </section>
-
 
 <section class="slide">
 	<div class="slide" style="margin-left:11%">
 		<h2>Deploying our TODO application</h2>
+		<div class="slide">
+			<h3>Configure to use a remote MongoDB instance</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+boolean local  = false; // do it with a conf property
+			</pre>
+		</div>
 		<div class="slide">
 			<h3>Create the artifact of our application</h3>
 		</div>
@@ -774,18 +804,80 @@ play clean dist
 		</div>
 		<div class="slide">			
 			<pre class="shell">
-vmc push --path=dist/todo-1.0-SNAPSHOT.zip
+vmc push --path=dist/todo-nosql-1.0-SNAPSHOT.zip
 			</pre>
 		</div>
 		<div class="slide">
-			<h3>Configure the deployment. Remember to bind the service!</h3>
+			<h3>Configure the deployment. Remember to bind the MongoDB service!</h3>
 		</div>
 		<div class="slide">
-			<p><img src="images/CloudFoundryDatabaseConf.png" /></p>
+			<blockquote cite="https://cloudfoundry.atlassian.net/browse/CF-141">
+				https://cloudfoundry.atlassian.net/browse/CF-141
+	  			<p><cite><a href="https://cloudfoundry.atlassian.net/browse/CF-141">Cloud Foundry issues tracker</a></cite></p>
+			</blockquote>			
 		</div>
 	</div>
 </section>
 
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h1>Targeting a production environment</h1>
+	</div>
+</section>
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Deploy an application to CloudFoundy.com</h2>
+		<div class="slide">
+			<h3>Target our CloudFoundry.com account</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc target api.miguelinlas3.cloudfoundry.com
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Do the login</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc login (use your CloudFoundry credentials)
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Generate the artifact (our play application!)</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play clean dist
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create and bind the required services</h3>
+		</div>
+		<div class="slide">
+			<h3>There is no difference with our micro cloud!!</h3>
+		</div>		
+	</div>
+</section>
+
+<section class="slide">
+	<h1>And the next week . . .</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>More contents</h2>
+		<div class="slide"><p>Go deeper into other parts of the stack: other languages, frameworks, ...</p></div>
+		<div class="slide"><p>Moving our application to a different PaaS provider</p></div>
+		<div class="slide"><p>Going to a low level approach: an IaaS Cloud provider example</p></div>		
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Optional</h2>
+		<div class="slide"><p>Quick overview over the main PaaS Cloud providers. Deploy our app into some of them</p></div>
+		<div class="slide"><p>Architecture and internals of CloudFoundry</p></div>
+		<div class="slide"><p>Resume of the techs and foundations of the Cloud world</p></div>
+	</div>
+</section>
 
 <section class="slide" style="margin-left:11%">
 	<h2>References</h2>
