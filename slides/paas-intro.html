@@ -654,6 +654,139 @@ vmc push --path=dist/todo-1.0-SNAPSHOT.zip
 	</div>
 </section>
 
+
+<section class="slide">
+	<h1>
+		The TODO application
+		<div style="font-size: 70%">Using a NoSQL storage</div>
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Let´s build the same TODO application using MongoDB</h2>		
+	</div>
+
+	<div class="slide" style="margin-left:11%">
+		<h2>Creating a new application</h2>
+		<div class="slide">			
+			<pre class="shell">
+play new todo-nosql
+			</pre>
+		</div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Add the required Mongo dependencies</h2>
+		<div class="slide">			
+			<pre class="shell">
+
+			</pre>
+		</div>
+	</div>
+
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Routes</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+# Home page
+GET     /                           controllers.Application.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+POST    /task                       controllers.Application.addTask()
+GET     /tasks                      controllers.Application.allTasks()
+			</pre>
+		</div>	
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Components of the application</h2>
+		<div class="slide">
+			<h3>Controllers</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+package controllers;
+
+import models.Task;
+import play.data.Form;
+
+import play.*;
+import play.mvc.*;
+
+import play.db.ebean.Model;
+
+import java.util.List;
+
+import static play.libs.Json.toJson;
+
+import views.html.*;
+
+public class Application extends Controller {
+  
+  public static Result addTask() {
+		Form<Task> form = form(Task.class).bindFromRequest();
+
+		Task task = form.get();
+		task.save();
+
+		return redirect(routes.Application.index());
+  }
+
+  public static Result index() {
+    return ok(index.render("TODO Application", form(Task.class)));
+  }
+
+	public static Result allTasks() {
+	    return ok(toJson(Task.all()));
+	}
+  
+}
+			</pre>
+		</div>		
+	</div>
+</section>
+
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Deploying our TODO application</h2>
+		<div class="slide">
+			<h3>Create the artifact of our application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play clean dist
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Deploy the previous artifact into our micro instance</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+vmc push --path=dist/todo-1.0-SNAPSHOT.zip
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Configure the deployment. Remember to bind the service!</h3>
+		</div>
+		<div class="slide">
+			<p><img src="images/CloudFoundryDatabaseConf.png" /></p>
+		</div>
+	</div>
+</section>
+
+
 <section class="slide" style="margin-left:11%">
 	<h2>References</h2>
 
