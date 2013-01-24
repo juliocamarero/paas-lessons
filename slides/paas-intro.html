@@ -1058,6 +1058,118 @@ curl -i --data "" http://localhost:9000/rcomputers/MyNewMackBookPro/2013-01-25/2
 	</div>
 </section>
 
+<section class="slide">
+	<h1>
+		Storing documents in Amazon S3		
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>AWS S3 as documents storage</h2>
+
+		<div class="slide">
+			<h3>SDK dependency</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+val appDependencies = Seq(
+  "com.amazonaws" % "aws-java-sdk" % "1.3.29"   
+)
+			</pre>
+		</div>
+
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Creating a new Play2 plugin</h2>
+		<div class="slide">
+			<h3>Write the plugin</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+@Override
+public void onStart() {
+    String accessKey = application.configuration().getString(AWS_ACCESS_KEY);
+    String secretKey = application.configuration().getString(AWS_SECRET_KEY);
+    s3Bucket = application.configuration().getString(AWS_S3_BUCKET);
+    
+    if ((accessKey != null) && (secretKey != null)) {
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        amazonS3 = new AmazonS3Client(awsCredentials);
+        amazonS3.createBucket(s3Bucket);
+        Logger.info("Using S3 Bucket: " + s3Bucket);
+    }
+}
+
+@Override
+public boolean enabled() {
+    return (application.configuration().keys().contains(AWS_ACCESS_KEY) &&
+            application.configuration().keys().contains(AWS_SECRET_KEY) &&
+            application.configuration().keys().contains(AWS_S3_BUCKET));
+}
+			</pre>
+		</div>		
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>AWS S3 as documents storage</h2>
+
+		<div class="slide">
+			<h3>Configure the plugin</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+Create a file play.plugins in the conf folder
+Write 1500:plugins.S3Plugin
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>S3 configuration</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+// use ENV vars instead of writing it here
+aws.access.key=${?AWS_ACCESS_KEY}
+aws.secret.key=${?AWS_SECRET_KEY}
+aws.s3.bucket=the-name-of-your-bucket
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create an entity and a controller</h3>
+		</div>
+		<div class="slide">			
+			<pre class="java">
+@Override
+public void save() {
+    if (S3Plugin.amazonS3 == null) {
+        Logger.error("Could not save because amazonS3 was null");
+        throw new RuntimeException("Could not save");
+    }
+    else {
+        this.bucket = S3Plugin.s3Bucket;        
+        super.save(); // assigns an id
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, getActualFileName(), file);
+        putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
+        S3Plugin.amazonS3.putObject(putObjectRequest);
+    }
+}
+@Override
+public void delete() {
+    if (S3Plugin.amazonS3 == null) {
+        Logger.error("Could not delete because amazonS3 was null");
+        throw new RuntimeException("Could not delete");
+    }
+    else {
+        S3Plugin.amazonS3.deleteObject(bucket, getActualFileName());
+        super.delete();
+    }
+}				
+			</pre>
+		</div>		
+	</div>
+</section>
 
 <section class="slide">
 	<h1>
