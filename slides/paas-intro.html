@@ -971,6 +971,256 @@ play clean dist
 	</div>
 </section>
 
+<section class="slide">
+	<h1>Exercice one</h1>
+</section>
+
+<section class="slide">
+	<h1>
+		Exercice
+		<div style="font-size: 70%">Writing a small computer inventory</div>
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Computer inventory</h2>
+		<div class="slide"><p>Accesing the database</p></div>
+		<div class="slide"><p>Database and evolutions</p></div>
+		<div class="slide"><p>Writing the controller logic</p></div>
+		<div class="slide"><p>Configuring the routes of our application</p></div>
+		<div class="slide"><p>Writing the views (beautifying with Twitter bootstrap)</p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Deployment</h2>
+		<div class="slide"><p>Test in our development environment</p></div>
+		<div class="slide"><p>Deploy to our Micro instance</p></div>
+		<div class="slide"><p>Deploy to our production cloud provider CloudFoundry.com</p></div>
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Exercices</h2>
+		<div class="slide"><p>Convert our application into a REST backend</p></div>
+		<div class="slide"><p>Include the ability to attach a document with every machine</p></div>
+		<div class="slide"><p>Test it!!</p></div>		
+		<div class="slide"><p>Deploy to our production cloud provider CloudFoundry.com</p></div>
+	</div>
+</section>
+
+<section class="slide">
+	<h1>
+		Testing our REST backend
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Testing our REST backend using curl</h2>
+		<div class="slide">
+			<h3>Installing curl</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+<a href="http://curl.haxx.se/docs/install.html">How to install Curl</a>
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Get a company by id</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+curl -i http://localhost:9000/company/11
+			</pre>
+		</div>			
+		<div class="slide">
+			<h3>List all the companies in a page</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+curl -i http://localhost:9000/companies?page=1
+			</pre>
+		</div>				
+		<div class="slide">
+			<h3>List all the computers in a page</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+curl -i http://localhost:9000/rcomputers?page=1
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create a new computer</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+curl -i --data "" http://localhost:9000/rcomputers/MyNewMackBookPro/2013-01-25/2023-01-25/1
+			</pre>
+		</div>
+	</div>
+</section>
+
+
+<section class="slide">
+	<h1>
+		Changing the provider
+		<div style="font-size: 70%">Deploying our app to the Heroku PaaS</div>		
+	</h1>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Setting up the environment</h2>
+		<div class="slide">
+			<h3>Create an account in <a href="http://heroku.com">Heroku</a></h3>
+		</div>
+		<div class="slide">
+			<h3>Create an account in <a href="http://github.com">Github</a></h3>
+		</div>			
+		<div class="slide">
+			<h3>Download the <a href="https://toolbelt.heroku.com/">Heroku Toolbelt</a></h3>
+		</div>			
+	</div>
+	<div class="slide" style="margin-left:11%">
+		<h2>Deploying our application</h2>
+		<div class="slide">
+			<h3>Create a new Github repo</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+<a href="https://help.github.com/articles/creating-a-new-repository">Create a new repository in Github</a>
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Clone the repo in our local machine and set the initial description</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+git clone git@github.com:migue/computer-database.git
+cd computer-database
+touch README.md
+vi README.md
+git add README.md
+git commit --message="Description with the contents of the repo and the purpose of it"
+git push origin master
+			</pre>
+		</div>			
+		<div class="slide">
+			<h3>Copy the contents of the application to this repo</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+cp -R /Users/migue/courses/paas-lessons/applications/computer-database/* /tmp/computer-database/
+			</pre>
+		</div>				
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Setting up the environment</h2>
+		<div class="slide">
+			<h3>Typical gitignore</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+touch .gitignore
+vi .gitignore
+# Paste this content
+logs
+project/project
+project/target
+target
+tmp
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Configure the Heroku tooling</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+heroku login
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create our Heroku application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+heroku create
+			</pre>
+		</div>		
+		<div class="slide">
+			<h3>Deploy our application to Heroku</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+heroku keys:add ~/.ssh/id_rsa.pub
+git push heroku master
+			</pre>
+		</div>	
+		<div class="slide">
+			<h3>Check our app is running</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+heroku ps
+			</pre>
+		</div>				
+	</div>
+</section>
+
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Setting up the environment</h2>
+		<div class="slide">
+			<h3>Configure a PostgreSQL database: add dependency in the Build.scala file</h3>
+		</div>
+		<div class="slide">			
+			<pre class="scala">
+    val appDependencies = Seq(
+      // Add your project dependencies here,
+      "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+    )
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create Heroku config file</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+touch Procfile
+
+# Paste this content
+
+web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -DapplyEvolutions.default=true -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Visit our application</h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+heroku open
+			</pre>
+		</div>	
+		<div class="slide">
+			<h3>Take a look to the available commands</h3>
+		</div>		
+		<div class="slide">			
+			<pre class="shell">
+heroku
+			</pre>
+		</div>				
+	</div>
+</section>
+
+<section class="slide">
+	<h1>
+		A lower level example
+		<div style="font-size: 70%">Deploying our app to Amazon Web Services</div>		
+	</h1>
+</section>
+
+
 <section class="slide" style="margin-left:11%">
 	<h2>References</h2>
 
