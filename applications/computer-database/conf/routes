@@ -31,3 +31,5 @@ GET    /rcomputers                  controllers.Application.restList(page: Int, 
 
 POST   /rcomputers/:name/:introduced/:discontinued/:companyId              	controllers.Application.restSave(name, introduced: DateW, discontinued: DateW, companyId:Long)
 
+POST /documents				controllers.Application.upload()
+

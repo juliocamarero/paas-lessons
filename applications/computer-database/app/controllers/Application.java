@@ -16,33 +16,17 @@ import views.html.*;
 
 import models.*;
 
-/**
- * Manage a database of computers
- */
 public class Application extends Controller {
     
-    /**
-     * This result directly redirect to application home.
-     */
+
     public static Result GO_HOME = redirect(
         routes.Application.list(0, "name", "asc", "")
     );
     
-    /**
-     * Handle default path requests, redirect to computers list
-     */
     public static Result index() {
         return GO_HOME;
     }
 
-    /**
-     * Display the paginated list of computers.
-     *
-     * @param page Current page number (starts from 0)
-     * @param sortBy Column to be sorted
-     * @param order Sort order (either asc or desc)
-     * @param filter Filter applied on computer names
-     */
     public static Result list(int page, String sortBy, String order, String filter) {
         return ok(
             list.render(
@@ -52,11 +36,6 @@ public class Application extends Controller {
         );
     }
     
-    /**
-     * Display the 'edit form' of a existing Computer.
-     *
-     * @param id Id of the computer to edit
-     */
     public static Result edit(Long id) {
         Form<Computer> computerForm = form(Computer.class).fill(
             Computer.find.byId(id)
@@ -66,13 +45,9 @@ public class Application extends Controller {
         );
     }
     
-    /**
-     * Handle the 'edit form' submission 
-     *
-     * @param id Id of the computer to edit
-     */
     public static Result update(Long id) {
         Form<Computer> computerForm = form(Computer.class).bindFromRequest();
+
         if(computerForm.hasErrors()) {
             return badRequest(editForm.render(id, computerForm));
         }
@@ -80,10 +55,7 @@ public class Application extends Controller {
         flash("success", "Computer " + computerForm.get().name + " has been updated");
         return GO_HOME;
     }
-    
-    /**
-     * Display the 'new computer form'.
-     */
+
     public static Result create() {
         Form<Computer> computerForm = form(Computer.class);
         return ok(
@@ -141,6 +113,26 @@ public class Application extends Controller {
         computer.save();
 
         return ok(toJson(computer));
+    }
+
+
+    // Documents
+    public static Result upload() {
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart uploadFilePart = body.getFile("upload");
+
+        if (uploadFilePart != null) {
+            System.out.println("THis is a multipart request!!");
+            
+            S3File s3File = new S3File();
+            s3File.name = uploadFilePart.getFilename();
+            s3File.file = uploadFilePart.getFile();
+            s3File.save();
+
+            return ok(toJson(s3File));
+        }
+
+        return badRequest(toJson("File upload error"));
     }
 }
             
