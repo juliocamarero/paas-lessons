@@ -1327,21 +1327,127 @@ heroku
 
 <section class="slide">
 	<h1>
-		A lower level example
-		<div style="font-size: 70%">Deploying our app to Amazon Web Services</div>		
+		One more provider
+		<div style="font-size: 70%">Deploying our app to the OpenShift PaaS</div>		
 	</h1>
 </section>
 
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Setting up the environment</h2>
+		<div class="slide">
+			<h3>Create an account in <a href="https://openshift.redhat.com">OpenShift</a></h3>
+		</div>
+		<div class="slide">
+			<h3>Create an account in <a href="http://github.com">Github</a></h3>
+		</div>			
+		<div class="slide">
+			<h3>Install the command line tools</a></h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+sudo gem install rhc
+rhc setup (if this is the first time you install the tools)
+			</pre>
+		</div>
+<div class="slide">
+			<h3>Create a demo app</a></h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+play new play2demo
+cd play2demo
+git init
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Create a raw (do it yourself) application</a></h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+rhc app create play2demo -t diy-0.1 --no-git -l miguelinlas3@gmail.com
+			</pre>
+		</div>
+		<div class="slide">
+			<h3>Initial deploy</a></h3>
+		</div>
+		<div class="slide">			
+			<pre class="shell">
+git remote add origin ssh://68fd7e8a361d4ad783a20a6e913b2727@play2demo-miguelinlas3.rhcloud.com/~/git/play2demo.git/
+git pull -s recursive -X theirs origin master
+git add .
+git commit -m "initial deploy"
+git remote add quickstart -m master git://github.com/opensas/play2-openshift-quickstart.git
+git pull -s recursive -X theirs quickstart master
+			</pre>
+		</div>	
+	</div>
+</section>
+<section class="slide">
+	<h1>
+		Deploy the computer inventory application
+	</h1>
+</section>
+<section class="slide">
+	<div class="slide" style="margin-left:11%">
+		<h2>Deploying recipe</h2>
+		<div class="slide">			
+			<pre class="shell">
+rhc app create -a computerdb -t diy-0.1 --nogit
+git remote add origin ssh://uuid@computerdb-yourdomain.rhcloud.com/~/git/computerdb.git/
+git pull -s recursive -X theirs origin master
+git add .
+git commit -m "initial deploy"
+git remote add quickstart -m master git://github.com/opensas/play2-openshift-quickstart.git
+git pull -s recursive -X theirs quickstart master
 
-<section class="slide" style="margin-left:11%">
-	<h2>References</h2>
+play clean compile stage
+git add .
+git commit -m "deploying computerdb application"
+git push origin
 
-	<div class="slide">		
+rhc app tail -a computerdb
+# openshift action_hooks scripts configuration
+# ~~~~~
+openshift.play.params="-DapplyEvolutions.default=true"
+Now deploy your app once again with './openshift_deploy -q'
+
+rhc app cartridge add -a computerdb -c postgresql-8.4
+
+# openshift mysql database
+db.default.driver=com.mysql.jdbc.Driver
+db.default.url="jdbc:mysql://"${OPENSHIFT_DB_HOST}":"${OPENSHIFT_DB_PORT}/${OPENSHIFT_APP_NAME}
+db.default.user=${OPENSHIFT_DB_USERNAME}
+db.default.password=${OPENSHIFT_DB_PASSWORD}
+You'll also have to include the mysql driver as a dependency. Add this line to project/Build.scala file:
+
+val appDependencies = Seq( 
+    "postgresql" % "postgresql" % "8.4-901-1.jdbc4",
+) 
+
+# play framework command configuration
+# ~~~~~
+#openshift.play.params="-Xmx512M"
+			</pre>
+		</div>		
 	</div>
 </section>
 
 <section class="slide">
-	<h1>Questions & Answers (hopefully)</h1>
+	<h1>
+		That´s all!!
+	</h1>
+</section>
+
+<section class="slide" style="margin-left:11%">
+	<h2>References</h2>
+	<div class="slide"><p><a href="https://cloudfoundry.org">CloudFoundry.org</a></p></div>
+	<div class="slide"><p><a href="https://cloudfoundry.com">CloudFoundry.com</a></p></div>
+	<div class="slide"><p><a href="https://openshift.redhat.com">OpenShift</a></p></div>
+	<div class="slide"><p><a href="https://heroku.com">Heroku</a></p></div>
+	<div class="slide"><p><a href="https://aws.amazon.com">Amazon AWS</a></p></div>
+	<div class="slide"><p><a href="https://playframework.org">Play Framework</a></p></div>
+	
 </section>
 
 
